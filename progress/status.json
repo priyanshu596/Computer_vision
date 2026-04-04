@@ -1,0 +1,62 @@
+{
+  "github_username": "priyanshu596",
+  "repo": "Computer_vision",
+  "week5": {
+    "title": "Document Scanner",
+    "days": {
+      "31": { "done": false, "output": null },
+      "32": { "done": false, "output": null },
+      "33": { "done": false, "output": null },
+      "34": { "done": false, "output": null },
+      "35": { "done": false, "output": null },
+      "36": { "done": false, "output": null }
+    },
+    "project_done": false,
+    "kaggle_url": null,
+    "opencv_pr": null
+  },
+  "week6": {
+    "title": "Background Remover",
+    "days": {
+      "38": { "done": false, "output": null },
+      "39": { "done": false, "output": null },
+      "40": { "done": false, "output": null },
+      "41": { "done": false, "output": null },
+      "42": { "done": false, "output": null }
+    },
+    "project_done": false,
+    "kaggle_url": null,
+    "opencv_pr": null
+  },
+  "week7": {
+    "title": "Image Search Engine",
+    "days": {
+      "45": { "done": false, "output": null },
+      "46": { "done": false, "output": null },
+      "47": { "done": false, "output": null },
+      "48": { "done": false, "output": null },
+      "49": { "done": false, "output": null },
+      "50": { "done": false, "output": null },
+      "51": { "done": false, "output": null }
+    },
+    "project_done": false,
+    "kaggle_url": null,
+    "opencv_pr": null
+  },
+  "week8": {
+    "title": "People Counter",
+    "days": {
+      "52": { "done": false, "output": null },
+      "53": { "done": false, "output": null },
+      "54": { "done": false, "output": null },
+      "55": { "done": false, "output": null },
+      "56": { "done": false, "output": null },
+      "57": { "done": false, "output": null },
+      "58": { "done": false, "output": null },
+      "59": { "done": false, "output": null }
+    },
+    "project_done": false,
+    "kaggle_url": null,
+    "opencv_pr": null
+  }
+}

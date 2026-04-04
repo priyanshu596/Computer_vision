@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Test images in root (keep outputs/)
+*.jpg
+*.jpeg
+*.png
+*.mp4
+!outputs/*.png
+!outputs/*.jpg
+!docs/assets/*.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models / large files
+*.pt
+*.pkl
+*.h5
