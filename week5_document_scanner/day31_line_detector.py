@@ -26,6 +26,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import random
 
 os.makedirs('../outputs', exist_ok=True)
 
@@ -76,8 +77,8 @@ def make_test_document():
 
 img = make_test_document()
 # Uncomment to use a real image instead:
-# img = cv2.imread('document.jpg')
-# assert img is not None, "document.jpg not found — place it in this folder"
+img = cv2.imread('document1.webp')
+assert img is not None, "document.jpg not found — place it in this folder"
 
 # ─────────────────────────────────────────────
 # STEP 2 — Convert to grayscale and blur
@@ -95,7 +96,11 @@ blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 # Try threshold pairs: (50, 150), (100, 200), (30, 90)
 # Which gives the cleanest edges on your image?
 
-edges = None  # YOUR CODE HERE
+
+
+edges= cv2.Canny(blurred,100,200) 
+
+
 
 # ─────────────────────────────────────────────
 # STEP 4 — Detect lines with HoughLinesP
@@ -108,7 +113,7 @@ edges = None  # YOUR CODE HERE
 #   minLineLength = 100  (reject short segments)
 #   maxLineGap = 10      (how much gap is allowed in a line)
 
-lines = None  # YOUR CODE HERE
+lines = cv2.HoughLinesP(edges,1,np.pi/180,80,100,10)  # YOUR CODE HERE
 
 # ─────────────────────────────────────────────
 # STEP 5 — Draw each line in a different colour
@@ -122,12 +127,23 @@ lines = None  # YOUR CODE HERE
 result = img.copy()
 
 # YOUR CODE HERE
+if lines is not None:
+    for i in range(0,len(lines)):
+        l=lines[i][0]
+        color = (
+    random.randint(0,255),
+    random.randint(0,255),
+    random.randint(0,255)
+)
+        cv2.line(result, (l[0], l[1]), (l[2], l[3]),color, 2)
+        print(f"The total number of line segment is {len(lines)}")
 
 # ─────────────────────────────────────────────
 # STEP 6 — Display and save
 # ─────────────────────────────────────────────
 if edges is not None and result is not None:
     show_many([img, edges, result], ['Original', 'Canny Edges', 'Detected Lines'])
+    
     cv2.imwrite('../outputs/day31_lines.png', result)
     print("Saved → outputs/day31_lines.png")
 
@@ -135,10 +151,10 @@ if edges is not None and result is not None:
 # REFLECTION (answer in a comment before committing)
 # ─────────────────────────────────────────────
 # Q1: What happens when you increase the HoughLinesP threshold?
-# A1:
+# A1:when the Threshold is increasesd then the filtering factor is strict so lines with that many clear intersection passes
 
 # Q2: What's the difference between HoughLines and HoughLinesP?
-# A2:
+# A2:In houghlines the ouput is (rho,theta) u don't get the endpoints , but in houghlinep you get the endpoints.
 
 # WHERE THIS LEADS:
 # HoughLinesP finds line segments. Tomorrow (Day 32) you'll use contours
