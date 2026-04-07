@@ -5,7 +5,7 @@
     "title": "Document Scanner",
     "days": {
       "31": { "done": true, "output": "day31_lines.png" },
-      "32": { "done": false, "output": null },
+      "32": { "done": true, "output": "day32_corners.png" },
       "33": { "done": false, "output": null },
       "34": { "done": false, "output": null },
       "35": { "done": false, "output": null },

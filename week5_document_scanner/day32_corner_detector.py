@@ -44,8 +44,8 @@ def make_test_document():
         cv2.line(canvas, (100, y), (500, y - 10), (200, 200, 200), 1)
     return canvas
 
-img = make_test_document()
-# img = cv2.imread('document.jpg')
+#img = make_test_document()
+img = cv2.imread('document1.webp')
 
 # ─────────────────────────────────────────────
 # STEP 1 — Preprocess: gray → blur → edges
@@ -53,19 +53,21 @@ img = make_test_document()
 # YOUR TASK: Produce a clean edge image
 # Use the same pipeline as Day 31 (grayscale → GaussianBlur → Canny)
 
-gray    = None  # YOUR CODE
-blurred = None  # YOUR CODE
-edges   = None  # YOUR CODE
+gray    = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY) # YOUR CODE
+blurred = cv2.GaussianBlur(gray,(5,5),0)  # YOUR CODE
+edges   = cv2.Canny(blurred,100,150)  # YOUR CODE
 
 # ─────────────────────────────────────────────
 # STEP 2 — Find all contours
 # ─────────────────────────────────────────────
 # YOUR TASK: Use cv2.findContours on your edges image
 # Use: cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
+
 # Print the total number of contours found
 
-contours = None  # YOUR CODE
-# print(f"Found {len(contours)} contours")
+# YOUR CODE
+contours,_ =cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+print(f"Found {len(contours)} contours")
 
 # ─────────────────────────────────────────────
 # STEP 3 — Filter to 4-sided polygons
@@ -78,8 +80,6 @@ contours = None  # YOUR CODE
 #   3. If approx has exactly 4 points AND area > 5000 → it's a document candidate
 # Keep track of the largest qualifying contour
 
-doc_contour = None  # YOUR CODE — the 4-point approximation of the largest quad
-
 # ─────────────────────────────────────────────
 # STEP 4 — Draw corners and outline
 # ─────────────────────────────────────────────
@@ -91,7 +91,23 @@ doc_contour = None  # YOUR CODE — the 4-point approximation of the largest qua
 corner_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]  # B G R Y
 result = img.copy()
 
+doc_contours=[]
+for cnt in contours:
+    perimeter=cv2.arcLength(cnt,True)
+    area=cv2.contourArea(cnt)
+    epsilon=0.02*perimeter
+    approx=cv2.approxPolyDP(cnt,epsilon,True)
+    n=len(approx)
+    if n==4 and area>5000:
+        doc_contours.append(approx) # YOUR CODE — the 4-point approximation of the largest quad
+doc_contour = sorted(doc_contours, key=cv2.contourArea, reverse=True)[0]
+
 # YOUR CODE HERE
+cv2.drawContours(result,[doc_contour],-1,(0,255,0),5)
+print(f"Biggest contour:{doc_contour}")
+for i,j in zip(doc_contour,corner_colors):
+    print(i[0][0],i[0][1])
+    cv2.circle(result,(i[0][0],i[0][1]),20,j,-1)
 
 # ─────────────────────────────────────────────
 # STEP 5 — Display and save
@@ -105,10 +121,10 @@ if edges is not None:
 # REFLECTION
 # ─────────────────────────────────────────────
 # Q1: What does epsilon control in approxPolyDP? What happens if it's too large?
-# A1:
+# A1:If the epsilon control is too large it will take wrong reading like 2 as 4 , 3 as 4 like that 
 
 # Q2: Why do we pick the contour with the LARGEST area?
-# A2:
+# A2:because the contour with the largest area is supposed to be the outline or border
 
 # WHERE THIS LEADS:
 # You now have 4 corners. Tomorrow (Day 33) you'll use these to warp

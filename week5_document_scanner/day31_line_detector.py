@@ -135,7 +135,7 @@ if lines is not None:
     random.randint(0,255),
     random.randint(0,255)
 )
-        cv2.line(result, (l[0], l[1]), (l[2], l[3]),color, 2)
+        cv2.line(result, (l[0], l[1]), (l[2], l[3]),color, 10)
         print(f"The total number of line segment is {len(lines)}")
 
 # ─────────────────────────────────────────────
