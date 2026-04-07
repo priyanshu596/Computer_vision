@@ -28,6 +28,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+
 os.makedirs('../outputs', exist_ok=True)
 
 def show_many(imgs, titles):
@@ -48,6 +49,7 @@ def make_test_document():
     return canvas
 
 img = make_test_document()
+#img=cv2.imread("document1.webp",cv2.COLOR_BGR2RGB)
 # Known corners of the synthetic document (TL, TR, BR, BL)
 known_corners = np.array([[80, 60], [520, 30], [540, 440], [60, 460]], dtype=np.float32)
 
@@ -63,8 +65,16 @@ def order_corners(pts):
     Takes 4 points in any order.
     Returns them ordered: [TL, TR, BR, BL]
     """
-    # YOUR CODE HERE
-    pass
+    # YOUR CODE HER
+    rect=np.zeros((4,2))
+    s=pts.sum(axis=1)
+    rect[0]=pts[np.argmin(s)]
+    rect[2]=pts[np.argmax(s)]
+    diff=np.diff(pts,axis=1)
+    rect[1]=pts[np.argmin(diff)]
+    rect[3]=pts[np.argmax(diff)]
+
+    return rect
 
 # ─────────────────────────────────────────────
 # STEP 2 — Compute output dimensions
@@ -77,7 +87,19 @@ def order_corners(pts):
 def compute_output_size(ordered_pts):
     """Returns (width, height) of the output flat document."""
     # YOUR CODE HERE
-    pass
+    (tl, tr, br, bl) = ordered_pts
+
+    widthA=np.sqrt(((tl[0]-tr[0])**2)+((tl[1]-tr[1])**2))
+    widthB=np.sqrt(((bl[0]-br[0])**2)+((bl[1]-br[1])**2))
+    width=max(int(widthA),int(widthB))
+
+    heightA=np.linalg.norm(tl-bl)
+    heightB=np.linalg.norm(tr-br)
+    height=max(int(heightA),int(heightB))
+
+    return width,height
+
+    
 
 # ─────────────────────────────────────────────
 # STEP 3 — Apply perspective transform
@@ -90,13 +112,22 @@ def compute_output_size(ordered_pts):
 # 5. cv2.warpPerspective(img, M, (w, h)) → flat image
 
 def warp_to_flat(img, corners):
-    """
-    corners: 4 points as (x,y) in any order
-    Returns: warped flat image
-    """
-    # YOUR CODE HERE
-    pass
+    ordered = order_corners(corners)
+    w, h = compute_output_size(ordered)
 
+    dst = np.array([
+        [0, 0],        # top-left
+        [w-1, 0],      # top-right
+        [w-1, h-1],    # bottom-right
+        [0, h-1]       # bottom-left
+    ], dtype=np.float32)
+
+    M = cv2.getPerspectiveTransform(ordered.astype(np.float32), dst)
+
+    flat = cv2.warpPerspective(img, M, (w, h))
+    return flat
+
+    
 # ─────────────────────────────────────────────
 # STEP 4 — Test it
 # ─────────────────────────────────────────────
@@ -112,10 +143,9 @@ if flat is not None:
 # REFLECTION
 # ─────────────────────────────────────────────
 # Q1: What happens if you pass corners in the wrong order?
-# A1: (try it and see)
-
+# A1: If corners are passed in wrong then the transformation becomes distorted images are cropped 
 # Q2: The transform matrix M is 3x3. Why does a 2D transform need 3x3?
-# A2:
+# A2: 
 
 # WHERE THIS LEADS:
 # Tomorrow (Day 34) you'll clean up this flat output — removing shadows,
