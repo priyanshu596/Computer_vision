@@ -11,7 +11,7 @@
 
 | Week | Project | Status | Kaggle |
 |------|---------|--------|--------|
-| Week 5 | Document Scanner | █░░░░░ 1/6 days · project ⬜ | — |
+| Week 5 | Document Scanner | ██░░░░ 2/6 days · project ⬜ | — |
 | Week 6 | Background Remover & Virtual BG | ░░░░░ 0/5 days · project ⬜ | — |
 | Week 7 | Image Search Engine | ░░░░░░░ 0/7 days · project ⬜ | — |
 | Week 8 | People Counter | ░░░░░░░░ 0/8 days · project ⬜ | — |
@@ -24,7 +24,7 @@
 | Day | Topic | Done |
 |-----|-------|------|
 | 31 | — | ✅ |
-| 32 | — | ⬜ |
+| 32 | — | ✅ |
 | 33 | — | ⬜ |
 | 34 | — | ⬜ |
 | 35 | — | ⬜ |
