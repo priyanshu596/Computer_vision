@@ -11,10 +11,10 @@
 
 | Week | Project | Status | Kaggle |
 |------|---------|--------|--------|
-| Week 5 | Document Scanner | ⬜ Not started | — |
-| Week 6 | Background Remover & Virtual BG | ⬜ Not started | — |
-| Week 7 | Image Search Engine | ⬜ Not started | — |
-| Week 8 | People Counter | ⬜ Not started | — |
+| Week 5 | Document Scanner | █░░░░░ 1/6 days · project ⬜ | — |
+| Week 6 | Background Remover & Virtual BG | ░░░░░ 0/5 days · project ⬜ | — |
+| Week 7 | Image Search Engine | ░░░░░░░ 0/7 days · project ⬜ | — |
+| Week 8 | People Counter | ░░░░░░░░ 0/8 days · project ⬜ | — |
 
 ---
 
@@ -23,67 +23,45 @@
 ### Week 5 — Document Scanner
 | Day | Topic | Done |
 |-----|-------|------|
-| 31 | Line Detector | ⬜ |
-| 32 | Corner Detector | ⬜ |
-| 33 | Perspective Correction | ⬜ |
-| 34 | Document Enhancement | ⬜ |
-| 35 | Deskewer | ⬜ |
-| 36 | Scanner UI Overlay | ⬜ |
-| 37 | Week 5 Project | ⬜ |
+| 31 | — | ✅ |
+| 32 | — | ⬜ |
+| 33 | — | ⬜ |
+| 34 | — | ⬜ |
+| 35 | — | ⬜ |
+| 36 | — | ⬜ |
+| 37 | **Project** | ⬜ |
 
-### Week 6 — Background Remover
+### Week 6 — Background Remover & Virtual BG
 | Day | Topic | Done |
 |-----|-------|------|
-| 38 | Green Screen Remover | ⬜ |
-| 39 | GrabCut | ⬜ |
-| 40 | Mask Feathering | ⬜ |
-| 41 | Virtual Background | ⬜ |
-| 42 | Motion Detection | ⬜ |
-| 43-44 | Week 6 Project | ⬜ |
+| 38 | — | ⬜ |
+| 39 | — | ⬜ |
+| 40 | — | ⬜ |
+| 41 | — | ⬜ |
+| 42 | — | ⬜ |
+| 43-44 | **Project** | ⬜ |
 
 ### Week 7 — Image Search Engine
 | Day | Topic | Done |
 |-----|-------|------|
-| 45 | Histogram Matching | ⬜ |
-| 46 | ORB Features | ⬜ |
-| 47 | Search Index | ⬜ |
-| 48 | HOG Features | ⬜ |
-| 49 | Feature Normalization + Cosine Similarity | ⬜ |
-| 50-51 | Duplicate Detector | ⬜ |
-| 52 | Week 7 Project | ⬜ |
+| 45 | — | ⬜ |
+| 46 | — | ⬜ |
+| 47 | — | ⬜ |
+| 48 | — | ⬜ |
+| 49 | — | ⬜ |
+| 50 | — | ⬜ |
+| 51 | — | ⬜ |
+| 52 | **Project** | ⬜ |
 
 ### Week 8 — People Counter
 | Day | Topic | Done |
 |-----|-------|------|
-| 52 | Background Subtraction | ⬜ |
-| 53 | Blob Detection | ⬜ |
-| 54 | Object Tracker + IoU | ⬜ |
-| 55-56 | Counting Line | ⬜ |
-| 57-58 | Speed Estimation | ⬜ |
-| 59 | Stats Dashboard | ⬜ |
-| 60 | Week 8 Final Project | ⬜ |
-
----
-
-## 🚀 Setup
-
-```bash
-git clone https://github.com/priyanshu596/Computer_vision
-cd Computer_vision
-python -m venv venv
-venv\Scripts\activate        # Windows
-pip install -r requirements.txt
-```
-
----
-
-## 📌 Daily Workflow
-
-```bash
-# After finishing a day's script:
-git add .
-git commit -m "Day 31 done — line detector"
-git push
-```
-
-The dashboard at the live link above updates automatically.
+| 52 | — | ⬜ |
+| 53 | — | ⬜ |
+| 54 | — | ⬜ |
+| 55 | — | ⬜ |
+| 56 | — | ⬜ |
+| 57 | — | ⬜ |
+| 58 | — | ⬜ |
+| 59 | — | ⬜ |
+| 60 | **Project** | ⬜ |
