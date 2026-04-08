@@ -40,13 +40,13 @@ cv2.putText(flat, 'Invoice #123', (60, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (80,8
 for x in range(30):
     alpha = (30 - x) / 30 * 0.4
     flat[:, x] = (flat[:, x] * (1 - alpha)).astype(np.uint8)
-# flat = cv2.imread('../outputs/day33_warped.png')
+flat = cv2.imread('../outputs/day33_warped.png')
 
 
 # ─────────────────────────────────────────────
 # STEP 1 — Convert to grayscale
 # ─────────────────────────────────────────────
-gray = None  # YOUR CODE
+gray = cv2.cvtColor(flat,cv2.COLOR_BGR2GRAY)  # YOUR CODE
 
 # ─────────────────────────────────────────────
 # STEP 2 — Try both thresholding approaches
@@ -60,8 +60,8 @@ gray = None  # YOUR CODE
 # blockSize: size of neighbourhood (must be odd). Larger = handles bigger shadows
 # C: constant subtracted from mean. Higher = darker threshold
 
-otsu     = None  # YOUR CODE
-adaptive = None  # YOUR CODE
+otsu     = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)  # YOUR CODE
+adaptive = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY, blockSize=21, C=10)  
 
 # ─────────────────────────────────────────────
 # STEP 3 — Sharpen the result
@@ -70,7 +70,10 @@ adaptive = None  # YOUR CODE
 sharpen_kernel = np.array([[0, -1, 0],
                             [-1, 5, -1],
                             [0, -1, 0]])
-sharpened = None  # YOUR CODE: cv2.filter2D(...)
+
+sharpened = cv2.filter2D(src=adaptive,ddepth=-1,kernel=sharpen_kernel)
+
+
 
 # ─────────────────────────────────────────────
 # STEP 4 — Build enhance_scan function
@@ -81,7 +84,15 @@ def enhance_scan(img):
     Returns a clean, high-contrast grayscale image.
     """
     # YOUR CODE — combine the best steps from above into one function
-    pass
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    
+    
+    cleaned = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY, blockSize=21, C=10)  
+    sharpened = cv2.filter2D(src=cleaned,ddepth=-1,kernel=sharpen_kernel)
+
+    
+
+    return cleaned
 
 # Test it
 cleaned = enhance_scan(flat)
@@ -92,9 +103,27 @@ if cleaned is not None:
 
 # REFLECTION
 # Q1: When would adaptive threshold fail where Otsu would work better?
-# A1:
+# A1:# Adaptive threshold may fail when:
+# - lighting is uniform (no shadows)
+# - it over-segments the image
+# - creates noisy or broken text
+
+# In such cases, Otsu works better because:
+# - it finds a global optimal threshold
+# - produces cleaner binary output
+
 # Q2: What does blockSize control in adaptiveThreshold?
-# A2:
+# A2:# blockSize defines the size of the local neighborhood
+# used to compute the threshold for each pixel.
+
+# Small blockSize:
+# - captures fine details
+# - sensitive to noise
+
+# Large blockSize:
+# - handles large shadows better
+# - smoother results
+
 
 # WHERE THIS LEADS:
 # Day 35 handles a different problem: what if the document isn't perspective-distorted
