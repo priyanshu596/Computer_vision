@@ -1,22 +1,3 @@
-# Day 36 | Week 5: Document Scanner
-# Topic:  Scanner UI Overlay
-# Goal:   Draw a live preview showing detected document before scanning
-# Output: outputs/day36_preview.png
-# Status: [ ] Not started  [ ] In progress  [ ] Done
-
-# WHAT YOU'LL LEARN TODAY
-# Real scanner apps show a preview: green overlay on detected area, numbered corners,
-# and a status bar. Today you build exactly that using cv2.addWeighted.
-#
-# Key function:
-#   cv2.addWeighted(src1, alpha, src2, beta, gamma)
-#   → blends two images: output = src1*alpha + src2*beta + gamma
-#   Use alpha=0.6, beta=0.4 to make the overlay semi-transparent
-
-# RESOURCES
-# addWeighted: https://docs.opencv.org/4.x/d2/de8/group__core__array.html#gafafb2513349db3bcff51f54ee5592a19
-# Good example: https://pyimagesearch.com/2016/03/07/transparent-overlays-with-opencv/
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,6 +5,9 @@ import os
 
 os.makedirs('../outputs', exist_ok=True)
 
+# ─────────────────────────────────────────────
+# TEST IMAGE
+# ─────────────────────────────────────────────
 def make_test_document():
     canvas = np.ones((500, 600, 3), dtype=np.uint8) * 120
     pts = np.array([[80, 60], [520, 30], [540, 440], [60, 460]], dtype=np.int32)
@@ -32,93 +16,169 @@ def make_test_document():
         cv2.line(canvas, (100, y), (500, y - 10), (180, 180, 180), 1)
     return canvas, pts
 
-img, doc_pts = make_test_document()
+#img, doc_pts = make_test_document()
+img=cv2.imread("document1.webp")
 
 # ─────────────────────────────────────────────
-# STEP 1 — Detect the document outline
+# STEP 1 — Detect document corners
 # ─────────────────────────────────────────────
-# YOUR TASK: Reuse your Day 32 approach to find the 4 corners
-# (or just use doc_pts directly for testing while you build the UI)
-
 def find_document_corners(img):
     """Returns 4 corner points of the largest quadrilateral, or None."""
-    # YOUR CODE HERE — copy from Day 32
-    pass
+    
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(blurred, 100, 150)
 
-corners = find_document_corners(img)
-if corners is None:
-    corners = doc_pts  # fallback to known corners for testing
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    doc_contours = []
+    for cnt in contours:
+        perimeter = cv2.arcLength(cnt, True)
+        area = cv2.contourArea(cnt)
+        approx = cv2.approxPolyDP(cnt, 0.02 * perimeter, True)
+
+        if len(approx) == 4 and area > 5000:
+            doc_contours.append(approx)
+
+    if len(doc_contours) == 0:
+        return None
+
+    doc_contour = sorted(doc_contours, key=cv2.contourArea, reverse=True)[0]
+    return doc_contour
+
 
 # ─────────────────────────────────────────────
-# STEP 2 — Semi-transparent green overlay
+# STEP 2 — Transparent overlay
 # ─────────────────────────────────────────────
-# YOUR TASK:
-# 1. Create a copy of the image
-# 2. On that copy, fill the document polygon with green: cv2.fillPoly
-# 3. Blend with original using cv2.addWeighted (alpha=0.7, beta=0.3)
-
 def draw_transparent_overlay(img, pts, color=(0, 200, 80)):
     """Draws a semi-transparent filled polygon over the document area."""
+    
     overlay = img.copy()
-    # YOUR CODE HERE
-    pass
 
-# ─────────────────────────────────────────────
-# STEP 3 — Numbered corner circles
-# ─────────────────────────────────────────────
-# YOUR TASK:
-# For each corner (i, point):
-#   - Draw a filled circle in a distinct colour
-#   - Draw the number (1,2,3,4) inside it using cv2.putText
+    # Fill polygon
+    cv2.fillPoly(overlay, [pts], color)
 
-def draw_numbered_corners(img, pts):
-    """Draws numbered circles at each corner."""
-    corner_colors = [(255, 80, 80), (80, 255, 80), (80, 80, 255), (255, 255, 80)]
-    # YOUR CODE HERE
-    pass
+    # Blend
+    alpha = 0.7
+    result = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
 
-# ─────────────────────────────────────────────
-# STEP 4 — Bottom status bar
-# ─────────────────────────────────────────────
-# YOUR TASK:
-# Draw a dark semi-transparent rectangle at the bottom of the image
-# Add text: "Document detected — tap to scan"
-
-def draw_status_bar(img, text="Document detected — tap to scan"):
-    """Adds a dark status bar at the bottom with white text."""
-    result = img.copy()
-    h, w = result.shape[:2]
-    # YOUR CODE HERE — dark bar + white text
     return result
 
+
 # ─────────────────────────────────────────────
-# STEP 5 — Combine into scanner_preview()
+# STEP 3 — Numbered corners
+# ─────────────────────────────────────────────
+def draw_numbered_corners(img, pts):
+    """Draws numbered circles at each corner."""
+    
+    corner_colors = [(255, 80, 80), (80, 255, 80), (80, 80, 255), (255, 255, 80)]
+    
+    for idx, (p, color) in enumerate(zip(pts, corner_colors), start=1):
+        x, y = p[0][0], p[0][1]
+
+        # Circle
+        cv2.circle(img, (x, y), 20, color, -1)
+
+        # Number text
+        cv2.putText(
+            img,
+            str(idx),
+            (x - 10, y + 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (255, 255, 255),
+            2,
+            cv2.LINE_AA
+        )
+
+    return img
+
+
+# ─────────────────────────────────────────────
+# STEP 4 — Status bar
+# ─────────────────────────────────────────────
+def draw_status_bar(img, text="Document detected — tap to scan"):
+    """Adds a dark status bar at the bottom with white text."""
+    
+    result = img.copy()
+    overlay = result.copy()
+
+    h, w = result.shape[:2]
+    bar_height = int(h * 0.12)
+
+    # Rectangle
+    cv2.rectangle(overlay, (0, h - bar_height), (w, h), (0, 0, 0), -1)
+
+    # Blend
+    alpha = 0.6
+    cv2.addWeighted(overlay, alpha, result, 1 - alpha, 0, result)
+
+    # Text
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.7
+    thickness = 2
+
+    (text_w, text_h), _ = cv2.getTextSize(text, font, font_scale, thickness)
+
+    text_x = (w - text_w) // 2
+    text_y = h - (bar_height - text_h) // 2
+
+    cv2.putText(
+        result,
+        text,
+        (text_x, text_y),
+        font,
+        font_scale,
+        (255, 255, 255),
+        thickness,
+        cv2.LINE_AA
+    )
+
+    return result
+
+
+# ─────────────────────────────────────────────
+# STEP 5 — Full pipeline
 # ─────────────────────────────────────────────
 def scanner_preview(img):
     """Full scanner UI overlay."""
+    
     result = img.copy()
+
     corners = find_document_corners(result)
     if corners is None:
         return result
+
     result = draw_transparent_overlay(result, corners)
-    draw_numbered_corners(result, corners)
+    result = draw_numbered_corners(result, corners)
     result = draw_status_bar(result)
+
     return result
 
+
+# ─────────────────────────────────────────────
+# RUN
+# ─────────────────────────────────────────────
 preview = scanner_preview(img)
+
 if preview is not None:
     plt.figure(figsize=(8, 6))
     plt.imshow(cv2.cvtColor(preview, cv2.COLOR_BGR2RGB))
-    plt.axis('off'); plt.title('Scanner Preview UI'); plt.tight_layout(); plt.show()
+    plt.axis('off')
+    plt.title('Scanner Preview UI')
+    plt.tight_layout()
+    plt.show()
+
     cv2.imwrite('../outputs/day36_preview.png', preview)
     print("Saved → outputs/day36_preview.png")
 
-# REFLECTION
-# Q1: What does the alpha parameter in addWeighted control?
-# A1:
-# Q2: How would you add a "confidence score" percentage to the UI?
-# A2:
 
-# WHERE THIS LEADS:
-# Tomorrow is the Week 5 project — you'll combine Days 31-36 into
-# one clean scan_document() function and test it on 3 inputs.
+# ─────────────────────────────────────────────
+# REFLECTION
+# ─────────────────────────────────────────────
+# Q1: What does the alpha parameter in addWeighted control?
+# A1: It controls transparency (opacity) of the overlay.
+
+# Q2: How would you add a "confidence score" percentage to the UI?
+# A2: Use cv2.putText() to display a computed score (e.g., contour quality).
+    

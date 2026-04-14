@@ -66,13 +66,43 @@ tilted = rotate_image(doc, angle)
 #   3. Convert theta to degrees: angle_deg = np.degrees(theta) - 90
 #   4. The dominant angle is the skew → return its median
 
+import cv2
+import numpy as np
+
 def detect_skew_angle(img):
     """
     Returns the estimated skew angle in degrees.
     Positive = clockwise tilt, Negative = counter-clockwise.
     """
-    # YOUR CODE HERE
-    pass
+    
+    # Convert to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Edge detection (IMPORTANT)
+    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+    
+    # Hough Transform
+    lines = cv2.HoughLines(edges, 1, np.pi/180, 150)
+    
+    angle_degrees = []
+    
+    if lines is not None:
+        for i in range(len(lines)):
+            rho, theta = lines[i][0]
+            
+            # Convert to degrees and adjust
+            angle_deg = np.degrees(theta) - 90
+            angle_degrees.append(angle_deg)
+    
+    # Handle no lines case
+    if len(angle_degrees) == 0:
+        return 0.0
+    
+    # Use median instead of max (robust)
+    skew = np.median(angle_degrees)
+    
+    return skew
+
 
 # ─────────────────────────────────────────────
 # STEP 3 — Correct the skew
@@ -89,7 +119,7 @@ if detected is not None:
 
 # REFLECTION
 # Q1: Why do we take the median of detected angles instead of the mean?
-# A1:
+# A1:Mean is verys ensitive to outlier that's why we take meduan value
 # Q2: This approach works well for text documents. When might it fail?
 # A2:
 

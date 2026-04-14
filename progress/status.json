@@ -8,10 +8,10 @@
       "32": { "done": true, "output": "day32_corners.png" },
       "33": { "done": true, "output": "day33_warped.png" },
       "34": { "done": true, "output": "day34_enhanced.png" },
-      "35": { "done": false, "output": null },
-      "36": { "done": false, "output": null }
+      "35": { "done": true, "output": "day35_deskewed.png" },
+      "36": { "done": true, "output": "day36_preview.png" }
     },
-    "project_done": false,
+    "project_done": true,
     "kaggle_url": null,
     "opencv_pr": null
   },
