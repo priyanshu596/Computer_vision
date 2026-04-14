@@ -11,7 +11,7 @@
 
 | Week | Project | Status | Kaggle |
 |------|---------|--------|--------|
-| Week 5 | Document Scanner | ██████ 6/6 days · project ✅ | — |
+| Week 5 | Document Scanner | ██████ 6/6 days · project ✅ | [📓 Notebook](https://www.kaggle.com/code/warpedsharingan/document-scanner-with-opencv-no-deep-learning) |
 | Week 6 | Background Remover & Virtual BG | ░░░░░ 0/5 days · project ⬜ | — |
 | Week 7 | Image Search Engine | ░░░░░░░ 0/7 days · project ⬜ | — |
 | Week 8 | People Counter | ░░░░░░░░ 0/8 days · project ⬜ | — |
